@@ -1,0 +1,24 @@
+# Binaries
+bin/
+*.exe
+
+# Go
+*.test
+
+# Environment
+.env
+
+# Node
+node_modules/
+dist/
+.cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

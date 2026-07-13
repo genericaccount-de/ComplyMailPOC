@@ -1,0 +1,117 @@
+openapi: 3.1.0
+info:
+  title: ComplyMail API
+  version: 0.1.0
+  description: Backend API for ComplyMail — email style & compliance checking.
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+paths:
+  /check-compose-email:
+    post:
+      summary: Check a draft email for style and security issues
+      description: Called by the Outlook Add-in during composition.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckComposeRequest"
+      responses:
+        "200":
+          description: Check results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckComposeResponse"
+
+  /scan-outbound-email:
+    post:
+      summary: Scan an outbound email for sensitivity
+      description: Called by the SMTP proxy for each outbound message.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScanRequest"
+      responses:
+        "200":
+          description: Scan results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanResponse"
+
+  /healthz:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service is healthy
+
+components:
+  schemas:
+    CheckComposeRequest:
+      type: object
+      properties:
+        subject:
+          type: string
+        body:
+          type: string
+        recipients:
+          type: array
+          items:
+            type: string
+      required: [subject, body, recipients]
+
+    CheckComposeResponse:
+      type: object
+      properties:
+        suggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Suggestion"
+
+    Suggestion:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [style, security]
+        severity:
+          type: string
+          enum: [info, warning, error]
+        message:
+          type: string
+
+    ScanRequest:
+      type: object
+      properties:
+        from:
+          type: string
+        to:
+          type: array
+          items:
+            type: string
+        subject:
+          type: string
+        body:
+          type: string
+      required: [from, to, subject, body]
+
+    ScanResponse:
+      type: object
+      properties:
+        sensitivity:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+        flags:
+          type: array
+          items:
+            type: string
+        action:
+          type: string
+          enum: [pass, flag, redirect]

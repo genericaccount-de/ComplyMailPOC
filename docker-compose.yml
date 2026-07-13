@@ -1,0 +1,30 @@
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on: []
+
+  smtp-proxy:
+    build:
+      context: ./smtp-proxy
+      dockerfile: Dockerfile
+    ports:
+      - "2525:2525"
+    env_file:
+      - .env
+    depends_on:
+      - api
+
+  admin-console:
+    build:
+      context: ./admin-console
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - api

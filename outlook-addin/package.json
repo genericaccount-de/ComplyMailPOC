@@ -1,0 +1,16 @@
+{
+  "name": "complymail-outlook-addin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ComplyMail Outlook Add-in — compose-time style & security checks",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "vite": "^6.3.0"
+  }
+}
