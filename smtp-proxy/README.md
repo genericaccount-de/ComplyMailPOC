@@ -10,9 +10,10 @@ For each outbound email it:
 ## Run locally
 
 ```bash
-go run ./cmd/proxy
+go run ./cmd/proxy -config config.yaml
 ```
 
 ## Configuration
 
-See `../.env.example` for available environment variables.
+Configuration is loaded from a YAML file (default `config.yaml`, override with
+`-config`). Copy `config.example.yaml` to `config.yaml` and adjust as needed.

@@ -8,9 +8,14 @@ HTTP service exposing:
 ## Run locally
 
 ```bash
-go run ./cmd/api
+go run ./cmd/api -config config.yaml
 ```
 
 ## Configuration
 
-See `../.env.example` for available environment variables.
+Configuration is loaded from a YAML file (default `config.yaml`, override with
+`-config`). Copy `config.example.yaml` to `config.yaml` and adjust as needed.
+
+The LLM API key can be supplied via the config file (`llm.api_key`) or overridden
+at runtime with the `LLM_API_KEY` environment variable to keep secrets out of the
+file.

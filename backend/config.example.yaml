@@ -1,0 +1,19 @@
+# ComplyMail Backend API configuration.
+# Copy to config.yaml and adjust for your environment.
+
+server:
+  # Address the HTTP API listens on.
+  listen_addr: ":8080"
+
+llm:
+  # API root for the OpenAI-compatible endpoint.
+  # Mistral La Plateforme (EU-hosted): https://api.mistral.ai/v1
+  # Local Ollama: http://localhost:11434/v1
+  base_url: "https://api.mistral.ai/v1"
+  # Bearer token. Leave empty for local runtimes (e.g. Ollama).
+  # Can be overridden at runtime with the LLM_API_KEY environment variable.
+  api_key: ""
+  # Model identifier.
+  model: "mistral-small-latest"
+  # Per-request timeout (e.g. 30s, 1m30s).
+  timeout: "30s"

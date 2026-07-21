@@ -1,0 +1,10 @@
+# ComplyMail SMTP Proxy configuration.
+
+listen_addr: ":2525"
+
+upstream:
+  host: "mail.example.com"
+  port: 25
+
+backend:
+  api_url: "http://api:8080"

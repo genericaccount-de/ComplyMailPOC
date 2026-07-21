@@ -1,0 +1,14 @@
+# ComplyMail SMTP Proxy configuration.
+# Copy to config.yaml and adjust for your environment.
+
+# Address the proxy listens on for inbound SMTP.
+listen_addr: ":2525"
+
+# The customer's real mail server to relay accepted mail to.
+upstream:
+  host: "mail.example.com"
+  port: 25
+
+# ComplyMail backend API used to scan outbound email.
+backend:
+  api_url: "http://api:8080"
