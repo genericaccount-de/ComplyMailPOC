@@ -32,6 +32,7 @@ func main() {
 	})
 
 	styleCheckHandler := handler.NewStyleCheck(llmClient, "")
+	scanHandler := handler.NewScan(llmClient)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -42,6 +43,7 @@ func main() {
 		fmt.Fprintln(w, "ok")
 	})
 	r.Post("/check-style-email", styleCheckHandler.ServeHTTP)
+	r.Post("/scan-outbound-email", scanHandler.ServeHTTP)
 
 	log.Printf("ComplyMail API listening on %s (model=%s)", cfg.Server.ListenAddr, llmClient.Model())
 	if err := http.ListenAndServe(cfg.Server.ListenAddr, r); err != nil {
