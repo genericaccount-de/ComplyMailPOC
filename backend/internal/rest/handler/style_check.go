@@ -24,24 +24,24 @@ type StyleAnalyzer interface {
 	AnalyzeStyle(ctx context.Context, styleGuide string, email llm.Email) ([]llm.StyleSuggestion, error)
 }
 
-// Compose handles POST /check-style-email: it reviews a draft email and
+// StyleCheck handles POST /check-style-email: it reviews a draft email and
 // returns style/compliance suggestions for display in the Outlook add-in.
-type Compose struct {
+type StyleCheck struct {
 	analyzer   StyleAnalyzer
 	styleGuide string
 }
 
-// NewCompose builds a Compose handler. If styleGuide is empty, a built-in
+// NewStyleCheck builds a StyleCheck handler. If styleGuide is empty, a built-in
 // default guide is used.
-func NewCompose(analyzer StyleAnalyzer, styleGuide string) *Compose {
+func NewStyleCheck(analyzer StyleAnalyzer, styleGuide string) *StyleCheck {
 	if strings.TrimSpace(styleGuide) == "" {
 		styleGuide = defaultStyleGuide
 	}
-	return &Compose{analyzer: analyzer, styleGuide: styleGuide}
+	return &StyleCheck{analyzer: analyzer, styleGuide: styleGuide}
 }
 
 // composeRequest is the JSON body sent by the Outlook add-in.
-type composeRequest struct {
+type styleCheckRequest struct {
 	Subject    string   `json:"subject"`
 	Body       string   `json:"body"`
 	Recipients []string `json:"recipients"`
@@ -49,13 +49,13 @@ type composeRequest struct {
 
 // composeResponse is returned to the add-in. Suggestions is always non-nil so
 // clients can rely on receiving a JSON array.
-type composeResponse struct {
+type styleCheckResponse struct {
 	Suggestions []llm.StyleSuggestion `json:"suggestions"`
 }
 
 // ServeHTTP implements http.Handler.
-func (h *Compose) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var req composeRequest
+func (h *StyleCheck) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	var req styleCheckRequest
 	dec := json.NewDecoder(http.MaxBytesReader(w, r.Body, maxRequestBytes))
 	dec.DisallowUnknownFields()
 	if err := dec.Decode(&req); err != nil {
@@ -81,5 +81,5 @@ func (h *Compose) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if suggestions == nil {
 		suggestions = []llm.StyleSuggestion{}
 	}
-	writeJSON(w, http.StatusOK, composeResponse{Suggestions: suggestions})
+	writeJSON(w, http.StatusOK, styleCheckResponse{Suggestions: suggestions})
 }

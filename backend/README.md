@@ -1,7 +1,7 @@
 # ComplyMail Backend API
 
 HTTP service exposing:
-- `POST /check-compose-email` — called by the Outlook Add-in to get style & security suggestions.
+- `POST /check-style-email` — called by the Outlook Add-in to get style & security suggestions.
 - `POST /scan-outbound-email` — called by the SMTP proxy to classify outbound emails.
 - `GET /healthz` — health check.
 

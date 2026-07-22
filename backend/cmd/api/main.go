@@ -7,10 +7,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/genericaccount-de/comply-mail-poc/backend/internal/config"
-	"github.com/genericaccount-de/comply-mail-poc/backend/internal/llm"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+
+	"github.com/genericaccount-de/comply-mail-poc/backend/internal/config"
+	"github.com/genericaccount-de/comply-mail-poc/backend/internal/llm"
+	"github.com/genericaccount-de/comply-mail-poc/backend/internal/rest/handler"
 )
 
 func main() {
@@ -28,7 +30,8 @@ func main() {
 		Model:   cfg.LLM.Model,
 		Timeout: time.Duration(cfg.LLM.Timeout),
 	})
-	_ = llmClient // wired for handlers registered below
+
+	styleCheckHandler := handler.NewStyleCheck(llmClient, "")
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -38,6 +41,7 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintln(w, "ok")
 	})
+	r.Post("/check-style-email", styleCheckHandler.ServeHTTP)
 
 	log.Printf("ComplyMail API listening on %s (model=%s)", cfg.Server.ListenAddr, llmClient.Model())
 	if err := http.ListenAndServe(cfg.Server.ListenAddr, r); err != nil {

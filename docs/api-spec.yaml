@@ -9,7 +9,7 @@ servers:
     description: Local development
 
 paths:
-  /check-compose-email:
+  /check-style-email:
     post:
       summary: Check a draft email for style and security issues
       description: Called by the Outlook Add-in during composition.
@@ -18,14 +18,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CheckComposeRequest"
+              $ref: "#/components/schemas/CheckStyleRequest"
       responses:
         "200":
           description: Check results
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CheckComposeResponse"
+                $ref: "#/components/schemas/CheckStyleResponse"
 
   /scan-outbound-email:
     post:
@@ -54,7 +54,7 @@ paths:
 
 components:
   schemas:
-    CheckComposeRequest:
+    CheckStyleRequest:
       type: object
       properties:
         subject:
@@ -67,7 +67,7 @@ components:
             type: string
       required: [subject, body, recipients]
 
-    CheckComposeResponse:
+    CheckStyleResponse:
       type: object
       properties:
         suggestions:

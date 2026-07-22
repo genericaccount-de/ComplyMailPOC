@@ -89,7 +89,7 @@
 
 - Auth, rule engine, LLM orchestrator.  
 - Exposes endpoints:
-  - `POST /check-compose-email` for add‑in.  
+  - `POST /check-style-email` for add‑in.  
   - `POST /scan-outbound-email` for SMTP proxy.
 
 **LLM Layer**
