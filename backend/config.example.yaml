@@ -4,6 +4,10 @@
 server:
   # Address the HTTP API listens on.
   listen_addr: ":8080"
+  # Origins permitted by CORS (e.g. the Outlook add-in dev server).
+  # Use ["*"] to allow any origin. Defaults to https://localhost:3000.
+  allowed_origins:
+    - "https://localhost:3000"
 
 llm:
   # API root for the OpenAI-compatible endpoint.

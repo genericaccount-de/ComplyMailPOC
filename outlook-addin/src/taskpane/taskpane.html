@@ -4,11 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ComplyMail</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <style>
+    :root { font-family: "Segoe UI", system-ui, sans-serif; font-size: 14px; }
+    body { margin: 0; padding: 16px; color: #201f1e; }
+    h1 { font-size: 18px; margin: 0 0 12px; }
+    #check-btn {
+      background: #0f6cbd; color: #fff; border: none; border-radius: 4px;
+      padding: 8px 16px; font-size: 14px; cursor: pointer;
+    }
+    #check-btn:hover:not(:disabled) { background: #0c5aa6; }
+    #check-btn:disabled { background: #c8c6c4; cursor: default; }
+    #status { margin: 12px 0; color: #605e5c; min-height: 18px; }
+    #results { list-style: none; margin: 0; padding: 0; }
+    #results li {
+      border-left: 4px solid #c8c6c4; background: #faf9f8;
+      padding: 8px 12px; margin-bottom: 8px; border-radius: 2px;
+    }
+    #results li.info { border-left-color: #0f6cbd; }
+    #results li.warning { border-left-color: #d99b00; }
+    #results li.error { border-left-color: #a4262c; }
+    .sev { font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: .04em; }
+  </style>
 </head>
 <body>
   <h1>ComplyMail</h1>
-  <button id="check-btn">Check Email</button>
-  <div id="results"></div>
+  <button id="check-btn" disabled>Check Email</button>
+  <p id="status">Loading…</p>
+  <ul id="results"></ul>
   <script type="module" src="./taskpane.ts"></script>
 </body>
 </html>

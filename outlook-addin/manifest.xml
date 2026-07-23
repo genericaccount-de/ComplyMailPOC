@@ -7,7 +7,7 @@
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:type="MailApp">
-  <Id>00000000-0000-0000-0000-000000000000</Id>
+  <Id>d931287d-0291-4113-abdf-fdd93999d0a6</Id>
   <Version>0.1.0</Version>
   <ProviderName>ComplyMail</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>

@@ -10,6 +10,8 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@types/office-js": "^1.0.377",
+    "office-addin-dev-certs": "^1.13.4",
     "typescript": "^5.8.0",
     "vite": "^6.3.0"
   }

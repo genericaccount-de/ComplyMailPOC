@@ -2,6 +2,8 @@
 
 server:
   listen_addr: ":8080"
+  allowed_origins:
+    - "https://localhost:3000"
 
 llm:
   base_url: "https://openrouter.ai/api/v1"

@@ -26,6 +26,9 @@ type Config struct {
 type ServerConfig struct {
 	// ListenAddr is the address the API listens on, e.g. ":8080".
 	ListenAddr string `yaml:"listen_addr"`
+	// AllowedOrigins is the list of origins permitted by CORS, e.g. the
+	// Outlook add-in dev server. Use ["*"] to allow any origin.
+	AllowedOrigins []string `yaml:"allowed_origins"`
 }
 
 // LLMConfig holds settings for the OpenAI-compatible LLM endpoint.
@@ -63,6 +66,10 @@ const (
 	DefaultListenAddr = ":8080"
 	DefaultLLMTimeout = Duration(30 * time.Second)
 )
+
+// DefaultAllowedOrigins is used when server.allowed_origins is not set. It
+// matches the Outlook add-in dev server (see outlook-addin/vite.config.ts).
+var DefaultAllowedOrigins = []string{"https://localhost:3000"}
 
 // Load reads, expands ${VAR} references, parses, and validates the YAML
 // config at path, applying defaults.
@@ -115,6 +122,9 @@ func (c *Config) applyDefaults() {
 	}
 	if c.LLM.Timeout == 0 {
 		c.LLM.Timeout = DefaultLLMTimeout
+	}
+	if len(c.Server.AllowedOrigins) == 0 {
+		c.Server.AllowedOrigins = DefaultAllowedOrigins
 	}
 }
 

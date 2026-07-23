@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 
 	"github.com/genericaccount-de/comply-mail-poc/backend/internal/config"
 	"github.com/genericaccount-de/comply-mail-poc/backend/internal/llm"
@@ -37,6 +38,13 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   cfg.Server.AllowedOrigins,
+		AllowedMethods:   []string{http.MethodPost, http.MethodOptions},
+		AllowedHeaders:   []string{"Content-Type"},
+		AllowCredentials: false,
+		MaxAge:           300,
+	}))
 
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
