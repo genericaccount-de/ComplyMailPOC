@@ -16,6 +16,6 @@ go run ./cmd/api -config config.yaml
 Configuration is loaded from a YAML file (default `config.yaml`, override with
 `-config`). Copy `config.example.yaml` to `config.yaml` and adjust as needed.
 
-The LLM API key can be supplied via the config file (`llm.api_key`) or overridden
-at runtime with the `LLM_API_KEY` environment variable to keep secrets out of the
-file.
+Any config value may reference an environment variable using `${VAR}` syntax
+(resolved at load time; startup fails if the variable is unset). Use this to
+keep secrets out of the file, e.g. `api_key: "${LLM_API_KEY}"`.

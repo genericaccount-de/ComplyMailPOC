@@ -1,19 +1,20 @@
 // Package config loads and validates the backend API configuration
-// from a YAML file. A single secret (the LLM API key) may be overridden
-// via the LLM_API_KEY environment variable so credentials can be kept out
-// of the config file when desired.
+// from a YAML file.
+//
+// Any value may reference an environment variable using ${VAR} or $VAR
+// syntax (see os.Expand); references are resolved when the file is loaded and
+// loading fails if a referenced variable is unset. This keeps secrets such as
+// the LLM API key out of the file, e.g. api_key: "${LLM_API_KEY}".
 package config
 
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"gopkg.in/yaml.v3"
 )
-
-// EnvAPIKey is the environment variable that overrides llm.api_key.
-const EnvAPIKey = "LLM_API_KEY"
 
 // Config is the top-level backend configuration.
 type Config struct {
@@ -63,26 +64,49 @@ const (
 	DefaultLLMTimeout = Duration(30 * time.Second)
 )
 
-// Load reads, parses, and validates the YAML config at path, applying
-// defaults and environment overrides.
+// Load reads, expands ${VAR} references, parses, and validates the YAML
+// config at path, applying defaults.
 func Load(path string) (*Config, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("config: read %q: %w", path, err)
 	}
 
+	expanded, err := expandEnv(string(data))
+	if err != nil {
+		return nil, fmt.Errorf("config: %q: %w", path, err)
+	}
+
 	var cfg Config
-	if err := yaml.Unmarshal(data, &cfg); err != nil {
+	if err := yaml.Unmarshal([]byte(expanded), &cfg); err != nil {
 		return nil, fmt.Errorf("config: parse %q: %w", path, err)
 	}
 
 	cfg.applyDefaults()
-	cfg.applyEnvOverrides()
 
 	if err := cfg.validate(); err != nil {
 		return nil, err
 	}
 	return &cfg, nil
+}
+
+// expandEnv replaces ${VAR}/$VAR references in s with the corresponding
+// environment variable values. It returns an error listing any referenced
+// variables that are not set, so misconfiguration fails fast at startup.
+func expandEnv(s string) (string, error) {
+	var missing []string
+	expanded := os.Expand(s, func(name string) string {
+		v, ok := os.LookupEnv(name)
+		if !ok {
+			missing = append(missing, name)
+			return ""
+		}
+		return v
+	})
+	if len(missing) > 0 {
+		return "", fmt.Errorf("unset environment variable(s): %s", strings.Join(missing, ", "))
+	}
+	return expanded, nil
 }
 
 func (c *Config) applyDefaults() {
@@ -91,12 +115,6 @@ func (c *Config) applyDefaults() {
 	}
 	if c.LLM.Timeout == 0 {
 		c.LLM.Timeout = DefaultLLMTimeout
-	}
-}
-
-func (c *Config) applyEnvOverrides() {
-	if v := os.Getenv(EnvAPIKey); v != "" {
-		c.LLM.APIKey = v
 	}
 }
 

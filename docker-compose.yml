@@ -8,7 +8,7 @@ services:
     volumes:
       - ./backend/config.yaml:/etc/complymail/config.yaml:ro
     environment:
-      # Optional: keep the secret out of the config file and inject at runtime.
+      # Referenced by backend/config.yaml as ${LLM_API_KEY}.
       - LLM_API_KEY=${LLM_API_KEY:-}
     depends_on: []
 
